@@ -1,0 +1,12 @@
+{
+  "name": "@skycoin4444/nist-compliance-framework",
+  "version": "1.0.0",
+  "description": "NIST 800-53 compliance framework for government systems",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo 'compliance tests'",
+    "audit": "npm audit",
+    "scan": "echo 'security scan'"
+  }
+}
