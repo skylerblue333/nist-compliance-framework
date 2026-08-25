@@ -1,12 +1,17 @@
 {
-  "name": "@skycoin4444/nist-compliance-framework",
-  "version": "1.0.0",
-  "description": "NIST 800-53 compliance framework for government systems",
+  "name": "@skycoin4444/control-evidence-assessor",
+  "version": "1.1.0",
+  "description": "Engineering library for registering controls, attaching evidence, and producing deterministic assessment summaries",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "test": "echo 'compliance tests'",
-    "audit": "npm audit",
-    "scan": "echo 'security scan'"
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc -p tsconfig.json",
+    "test": "npm run build && node --test test/*.test.js",
+    "audit": "npm audit --audit-level=high",
+    "verify": "npm test && npm run audit"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
   }
 }
