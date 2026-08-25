@@ -1,44 +1,61 @@
-<!-- PORTFOLIO PROJECT PROFILE: maintained by the repository owner -->
+# Control Evidence Assessor
 
-## Project profile and code-audit snapshot
+A small TypeScript engineering library for registering security-control records, attaching implementation evidence references, and producing deterministic assessment summaries. It can be used as one input to a governance workflow, but it **does not certify NIST compliance** and is not a government authorization system.
 
-**What this is:** **nist-compliance-framework** is a public repository described as: “Core component of SKYCOIN4444 ecosystem. #SkyCoin4444 #AI #Blockchain #DevOps #Innovation” Its dominant language signals are **TypeScript (1 files)**.
+## What it does
 
-**Why it has value:** Its value is best understood through the implementation evidence currently present in the repository: **6 tracked files** were observed in the shallow audit, with the source structure and existing documentation providing the project’s specific context. This README does not treat a prototype, experiment, or archive as a production system without supporting evidence.
+- validates and normalizes control identifiers such as `AC-1` and `IA-2.1`
+- rejects duplicate control registration
+- requires non-empty evidence references before marking a control implemented
+- deduplicates evidence references
+- produces deterministic control ordering and implementation percentages
+- handles an empty control set as `0%` rather than `NaN`
+- records structured in-memory audit events for control registration and implementation
+- returns defensive copies so callers cannot mutate internal state accidentally
 
-**Implementation evidence:** No test-related file was detected by filename heuristics.; 1 dependency or package manifest(s) detected; No CI, build, Docker, or infrastructure signal was detected by the audit.; and 2 documentation or governance file(s) detected. Test filenames observed include none detected. Dependency or package files include `package.json`. Build, CI, or infrastructure signals include none detected.
+## What it does not do
 
-**Current status:** The repository is tracked on the `main` branch. The existing source tree, configuration, tests, workflows, and documentation remain authoritative for supported behavior and maturity. A code audit is not a production-readiness certification, and the presence of a test or workflow file does not establish that all checks pass.
+This library does not ship the NIST SP 800-53 catalog, determine control applicability, assess control effectiveness, validate evidence, perform continuous monitoring, produce an authorization package, issue an ATO, or establish legal/regulatory compliance. A `100%` report means only that every control **registered by the caller** was marked implemented with at least one evidence reference.
 
-**Relationship to the wider portfolio:** This repository is one focused component of the broader Skyler Blue Spillers portfolio across AI, software engineering, cloud and DevOps, cybersecurity, blockchain, finance, education, social systems, and creative work. It may provide a service boundary, implementation pattern, experiment, archive, or reusable idea for related repositories. Treat repositories as technical dependencies only where documented interfaces and verified project requirements support that relationship.
+## Usage
 
-**Quality and security note:** No obvious secret-like pattern was detected by the limited static scan; this is not a substitute for a security audit. No TODO/FIXME marker was detected in the scanned text files.
+```ts
+import { NISTComplianceFramework } from "@skycoin4444/control-evidence-assessor";
 
----
+const assessor = new NISTComplianceFramework();
+assessor.registerControl({
+  id: "AC-1",
+  family: "AC",
+  title: "Access Control Policy",
+  description: "Document the organization's access-control policy.",
+  implemented: false,
+  evidence: [],
+});
+assessor.implementControl("AC-1", ["policy/access-control.md", "ticket-123"]);
 
-# Nist Compliance Framework
+const report = assessor.generateComplianceReport();
+```
 
-![GitHub stars](https://img.shields.io/github/stars/skylerblue333/nist-compliance-framework?style=flat-square)
-![GitHub license](https://img.shields.io/github/license/skylerblue333/nist-compliance-framework?style=flat-square)
+## Verification
 
-## 🌟 Overview
-**nist-compliance-framework** is a professional-grade project within the **SkyCoin4444** ecosystem. It focuses on delivering high-value solutions in the domain of **TypeScript**.
+```bash
+npm install
+npm test
+npm audit --audit-level=high
+```
 
-## 🚀 Key Features
-- **Scalable Architecture**: Designed for enterprise-level growth and performance.
-- **Modern Standards**: Implements best practices for clean code and maintainability.
-- **Robust Integration**: Built to work seamlessly within modern cloud-native environments.
+`npm test` performs a strict TypeScript build and Node's built-in test suite. CI runs build/tests plus dependency audit on `main`, product branches, and pull requests.
 
-## 🛠️ Technology Stack
-- **Primary Domain**: TypeScript
-- **Ecosystem**: SkyCoin4444 Digital Platform
+## SKYCOIN4444 integration boundary
 
-## 📂 Structure
-The project is organized into a modular structure to ensure clarity and ease of development.
+The wider ecosystem can consume this as a neutral evidence-status library. Persisted evidence, identity/RBAC, evidence integrity, approval workflows, catalog/version management, external scanner ingestion, and audit-log durability should remain separate services or adapters.
 
-## 👨‍💻 Author
-**Skyler Blue Spillers**
-*Professional Chess Player & Software Engineer*
+## Status
 
----
-*Powered by SkyCoin4444*
+**Classification:** ENGINEERING LAB / beta library.
+
+Implementation and automated verification can be green without implying NIST compliance. Any real compliance assessment requires an authoritative control baseline, scope, qualified assessors, evidence review, risk decisions, and organization-specific governance.
+
+## License
+
+See `LICENSE`.
